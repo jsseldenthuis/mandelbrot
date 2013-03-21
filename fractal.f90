@@ -15,7 +15,7 @@ program Fractal
     real(8) :: start, finish, time
     real(8), allocatable :: image(:, :)
 
-    print *, 'Geometry (width x height):'
+    print *, 'Geometry (width, height):'
     read *, width, height
     print *, 'Zoom level (in powers of 2):'
     read *, zoom
@@ -67,17 +67,15 @@ contains
         num_x = size(image, 1)
         num_y = size(image, 2)
         image = 0
-        !$omp parallel private(i, j, x, y)
+        !$omp parallel do schedule(static, 1) private(i, j, x, y)
         do i = 1, num_x
             x = min_x + (i - 1) * (max_x - min_x) / (num_x - 1)
-            !$omp do schedule(static, 1)
             do j = 1, num_y
                 y = min_y + (j - 1) * (max_y - min_y) / (num_y - 1)
                 image(i, j) = escape_time(x, y, bailout, max_iter)
             end do
-            !$omp end do nowait
         end do
-        !$omp end parallel
+        !$omp end parallel do
 
     end subroutine
 
