@@ -24,6 +24,8 @@ program Fractal
     print *, 'Maximum number of iterations:'
     read *, max_iter
 
+    print '("Magnification: ", e9.3)', 2**zoom
+
     if (zoom > 0) then
         ! Interesting region
         x = -0.74364388703715870475_10
